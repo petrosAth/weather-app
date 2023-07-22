@@ -3,11 +3,13 @@ import '../stylesheets/typography.css';
 import '../stylesheets/variables.css';
 import '../stylesheets/main.css';
 
+import { getLocation, getInput, btnListener } from './location.js';
+
 const apiInfo = () => {
   const lat = 39.63;
   const lon = 22.41;
   const key = '8c6809504e25cdd6896385597447d077';
-  const units = 'metric'
+  const units = 'metric';
   const callURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${units}`;
 
   return callURL;
@@ -21,4 +23,10 @@ const getWeatherData = async () => {
   console.log(dataJson);
 };
 
-getWeatherData();
+const init = async () => {
+  const location = () => getLocation(getInput);
+  btnListener(location);
+  // getWeatherData();
+};
+
+init();
