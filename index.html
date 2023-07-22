@@ -7,7 +7,47 @@
     <title>Weather App</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="search__cont">
+        <div class="search__bar"></div>
+        <input type="text" class="search__bar" placeholder="Enter you location..." />
+        <button class="search__button">Search</button>
+      </div>
+      <div class="weather__cont">
+        <div class="weather__cont__main">
+          <div class="weather__main">
+            <span class="weather__temp"></span>
+            <span class="weather__temp-max"></span>
+            <span class="weather__temp-low"></span>
+            <span class="weather__temp-humidity"></span>
+            <span class="weather__desc"></span>
+          </div>
+        </div>
+        <div class="weather__cont__forecast">
+          <div class="weather__day1">
+            <span class="weather__temp"></span>
+            <span class="weather__temp-max"></span>
+            <span class="weather__temp-low"></span>
+            <span class="weather__temp-humidity"></span>
+            <span class="weather__desc"></span>
+          </div>
+          <div class="weather__day2">
+            <span class="weather__temp"></span>
+            <span class="weather__temp-max"></span>
+            <span class="weather__temp-low"></span>
+            <span class="weather__temp-humidity"></span>
+            <span class="weather__desc"></span>
+          </div>
+          <div class="weather__day3">
+            <span class="weather__temp"></span>
+            <span class="weather__temp-max"></span>
+            <span class="weather__temp-low"></span>
+            <span class="weather__temp-humidity"></span>
+            <span class="weather__desc"></span>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/scripts/main.js"></script>
   </body>
 </html>
