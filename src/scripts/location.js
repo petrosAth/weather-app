@@ -3,14 +3,9 @@ const getInput = () => {
   return input.value;
 };
 
-const getLocation = async (getInput) => {
-  const input = getInput();
-  console.log(input);
+const getLocation = async (apiCall, url, key, params) => {
+  const location = await apiCall('geo', url, key, params);
+  return location[0];
 };
 
-const btnListener = (func) => {
-  const btn = document.querySelector('.search__button');
-  btn.addEventListener('click', () => func());
-};
-
-export { getInput, getLocation, btnListener };
+export { getInput, getLocation };

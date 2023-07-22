@@ -3,30 +3,52 @@ import '../stylesheets/typography.css';
 import '../stylesheets/variables.css';
 import '../stylesheets/main.css';
 
-import { getLocation, getInput, btnListener } from './location.js';
+import * as key from './apiKey.json';
+import { getData, url } from './call.js';
+import { getLocation, getInput } from './location.js';
+import { getWeather } from './weather.js';
 
-const apiInfo = () => {
-  const lat = 39.63;
-  const lon = 22.41;
-  const key = '8c6809504e25cdd6896385597447d077';
-  const units = 'metric';
-  const callURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${units}`;
-
-  return callURL;
-};
-
-const getWeatherData = async () => {
-  const data = await fetch(apiInfo(), {
-    mode: 'cors',
-  });
-  const dataJson = await data.json();
-  console.log(dataJson);
+const btnListener = (func) => {
+  const btn = document.querySelector('.search__button');
+  btn.addEventListener('click', () => func());
 };
 
 const init = async () => {
-  const location = () => getLocation(getInput);
-  btnListener(location);
-  // getWeatherData();
+  const params = {
+    lat: '',
+    lon: '',
+    units: 'metric',
+    country: '',
+    state: '',
+    name: '',
+  };
+
+  const updateParams = (params, object) => {
+    Object.keys(params).map((key) => {
+      if (object[key]) {
+        params[key] = object[key];
+      }
+    });
+  };
+
+  const renderWeather = async () => {
+    params.name = getInput();
+    const location = await getLocation(getData, url, key.openWeather, params);
+    updateParams(params, location);
+
+    const weather = await getWeather(getData, url, key.openWeather, params);
+    console.log(weather);
+    // const weatherData = await getData('weather', url, key.openWeather, params);
+    // console.log(weatherData);
+  };
+
+  btnListener(renderWeather);
+
+  // const locationData = await getData('geo', url, key.openWeather, params);
+  // const coords = await getLocation(getData, url, key.openWeather, params);
+  // const weatherData = await getData('weather', url, key.openWeather, params);
+  // console.log(locationData);
+  // console.log(weatherData);
 };
 
 init();
