@@ -1,0 +1,20 @@
+:root {
+  --ff: 'Roboto', sans-serif;
+
+  --fw-n: 300;
+  --fw-m: 600;
+  --fw-b: 800;
+
+  --fs-1: 7rem;
+  --fs-2: 5rem;
+  --fs-3: 2rem;
+  --fs-p: 1rem;
+  --fs-btn: 1.5rem;
+
+  --f-clr: LightCyan;
+  --bg: MidnightBlue;
+  --bg-light: hsl(227, 19%, 34%);
+
+  --b: 2px solid SlateBlue;
+  --br: 10px;
+}

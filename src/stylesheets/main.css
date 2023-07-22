@@ -1,0 +1,40 @@
+body {
+  color: var(--f-clr);
+  background-color: var(--bg);
+}
+
+.search__bar {
+  padding: 20px;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+}
+
+.weather__cont {
+  border: var(--b);
+  padding: 20px;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 2fr 1fr;
+}
+
+.weather__icon__cont {
+  &.main {
+    padding: 20px;
+    margin: 2px;
+    border: var(--b);
+  }
+
+  &.forecast {
+    padding: 20px;
+    margin: 2px;
+    border: var(--b);
+  }
+}
+
+.weather__icon {
+  padding: 20px;
+  margin: 2px;
+  border: var(--b);
+}
