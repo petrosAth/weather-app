@@ -1,13 +1,13 @@
 const url = (key, params) => {
   return {
-    weather: `https://api.openweathermap.org/data/2.5/weather?lat=${params.lat}&lon=${params.lon}&appid=${key}&units=${params.units}`,
-    geo: `https://api.openweathermap.org/geo/1.0/direct?q=${params.name}&limit=1&appid=${key}`,
+    weather: `https://api.openweathermap.org/data/2.5/${params.type}?lat=${params.lat}&lon=${params.lon}&appid=${key}&units=${params.units}`,
+    geo: `https://api.openweathermap.org/geo/1.0/direct?q=${params}&limit=1&appid=${key}`,
   };
 };
 
-const getData = async (type, url, key, params) => {
+const getData = async (url) => {
   try {
-    const response = await fetch(url(key, params)[type], {
+    const response = await fetch(url, {
       mode: 'cors',
     });
     if (response.status === 200) {
@@ -22,4 +22,14 @@ const getData = async (type, url, key, params) => {
   }
 };
 
-export { getData, url };
+const getLocation = async (apiCall, url, key, location) => {
+  const newLocation = await apiCall(url(key, location)['geo']);
+  return newLocation;
+};
+
+const getWeather = async (apiCall, url, key, params) => {
+  const weatherData = await apiCall(url(key, params)['weather']);
+  return weatherData;
+};
+
+export { url, getData, getLocation, getWeather };
