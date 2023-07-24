@@ -3,8 +3,10 @@ import '../stylesheets/typography.css';
 import '../stylesheets/variables.css';
 import '../stylesheets/main.css';
 
-import * as key from './apiKey.json';
-import { url, getData, getLocation, getWeather } from './call.js';
+import * as key from './apiKeys.json';
+import { url, getData } from './weather/call.js';
+import { getLocation } from './weather/getLocation.js';
+import { getWeather, getForecastDates, getForecast } from './weather/getWeather.js';
 
 const getInput = () => {
   const input = document.querySelector('.search__input');
@@ -20,7 +22,7 @@ const init = async () => {
   const createMappedObject = (dataMap, data) => {
     const newObject = {};
     Object.keys(dataMap).map((key) => {
-      if (data[key]) {
+      if (data[dataMap[key]]) {
         newObject[key] = data[dataMap[key]];
       }
     });
@@ -43,25 +45,65 @@ const init = async () => {
     const params = {
       lat: lat,
       lon: lon,
-      type: 'forecast',
-      exclude: 'minutely,hourly,alerts',
       units: 'metric',
     };
 
+    const weatherInfo = (weatherData, date) => {
+      const weatherDataMap = {
+        details: {
+          temp: 'temp',
+          tempMin: 'temp_min',
+          tempMax: 'temp_max',
+          humidity: 'humidity',
+        },
+        weather: {
+          desc: 'description',
+          icon: 'icon',
+        },
+      };
+
+      const info = {
+        details: createMappedObject(weatherDataMap.details, { ...weatherData.main }),
+        weather: createMappedObject(weatherDataMap.weather, { ...weatherData.weather[0] }),
+      };
+
+      if (date) {
+        info.date = new Date(Date.parse(weatherData.dt_txt)).toLocaleString('default', { weekday: 'long' });
+      }
+
+      return info;
+    };
+
     const current = async () => {
-      const weather = await getWeather(getData, url, key.openWeather, params);
-      return weather;
+      params.type = 'weather';
+      const weatherData = await getWeather(getData, url, key.openWeather, params);
+      return weatherInfo(weatherData);
+    };
+
+    const forecast = async () => {
+      params.type = 'forecast';
+      const weatherData = await getWeather(getData, url, key.openWeather, params);
+      const forecastData = getForecast(getForecastDates(3), weatherData.list);
+
+      const forecast = [];
+      forecastData.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
+
+      return forecast;
     };
 
     return {
       current,
+      forecast,
     };
   };
 
   const renderWeather = async () => {
     const newLocation = await location();
-    const currentWeather = await weather(newLocation.lat, newLocation.lon).current();
-    console.log(currentWeather);
+    // console.log(newLocation);
+    const weatherCurrent = await weather(newLocation.lat, newLocation.lon).current();
+    // console.log(weatherCurrent);
+    const weatherForecast = await weather(newLocation.lat, newLocation.lon).forecast();
+    // console.log(weatherForecast);
   };
 
   btnListener(renderWeather);

@@ -22,14 +22,4 @@ const getData = async (url) => {
   }
 };
 
-const getLocation = async (apiCall, url, key, location) => {
-  const newLocation = await apiCall(url(key, location)['geo']);
-  return newLocation;
-};
-
-const getWeather = async (apiCall, url, key, params) => {
-  const weatherData = await apiCall(url(key, params)['weather']);
-  return weatherData;
-};
-
-export { url, getData, getLocation, getWeather };
+export { url, getData };
