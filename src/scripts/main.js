@@ -6,7 +6,7 @@ import '../stylesheets/main.css';
 import * as key from './apiKeys.json';
 import { url, getData } from './weather/call.js';
 import { getLocation } from './weather/getLocation.js';
-import { getWeather, getForecastDates, getForecast } from './weather/getWeather.js';
+import { getWeather, getForecast, fixOneDecimal, getFormatedDate, extractEdgeTemp } from './weather/getWeather.js';
 
 const getInput = () => {
   const input = document.querySelector('.search__input');
@@ -18,92 +18,126 @@ const btnListener = (fn) => {
   btn.addEventListener('click', () => fn());
 };
 
-const init = async () => {
-  const createMappedObject = (dataMap, data) => {
-    const newObject = {};
-    Object.keys(dataMap).map((key) => {
-      if (data[dataMap[key]]) {
-        newObject[key] = data[dataMap[key]];
-      }
+const location = async () => {
+  const locationDataMap = {
+    lat: 'lat',
+    lon: 'lon',
+    country: 'country',
+    state: 'state',
+    name: 'name',
+  };
+  const location = await getLocation(getData, url, key.openWeather, getInput());
+  return createMappedObject(locationDataMap, { ...location[0] });
+};
+
+const createMappedObject = (dataMap, data) => {
+  const newObject = {};
+  Object.keys(dataMap).map((key) => {
+    if (data[dataMap[key]]) {
+      newObject[key] = data[dataMap[key]];
+    }
+  });
+  return newObject;
+};
+
+const weather = (lat, lon, opt) => {
+  const params = {
+    lat: lat,
+    lon: lon,
+    units: opt.units,
+  };
+
+  const weatherInfo = (weatherData, date) => {
+    const weatherDataMap = {
+      details: {
+        temp: 'temp',
+        humidity: 'humidity',
+      },
+      weather: {
+        state: 'main',
+        desc: 'description',
+        icon: 'icon',
+      },
+    };
+
+    const info = {
+      details: createMappedObject(weatherDataMap.details, { ...weatherData.main }),
+      weather: createMappedObject(weatherDataMap.weather, { ...weatherData.weather[0] }),
+    };
+
+    if (date) {
+      info.date = new Date(Date.parse(weatherData.dt_txt)).toLocaleString('default', { weekday: 'long' });
+    }
+
+    return info;
+  };
+
+  const addEdgeTemps = (weather, edgeTemps) => {
+    edgeTemps.forEach((temps, index) => {
+      // console.log('weather: ', weather);
+      // console.log('temps: ', temps);
+      weather[index].details['tempMax'] = temps.max;
+      weather[index].details['tempMin'] = temps.min;
     });
-    return newObject;
+    return weather;
   };
 
-  const location = async () => {
-    const locationDataMap = {
-      lat: 'lat',
-      lon: 'lon',
-      country: 'country',
-      state: 'state',
-      name: 'name',
-    };
-    const location = await getLocation(getData, url, key.openWeather, getInput());
-    return createMappedObject(locationDataMap, { ...location[0] });
+  const current = async () => {
+    params.type = 'weather';
+    const currentWeatherData = await getWeather(getData, url, key.openWeather, params);
+
+    params.type = 'forecast';
+    const forecastWeatherData = await getWeather(getData, url, key.openWeather, params);
+
+    const edgeTemps = extractEdgeTemp(forecastWeatherData, [getFormatedDate()]);
+
+    let weather = weatherInfo(currentWeatherData);
+
+    weather = addEdgeTemps([weather], edgeTemps);
+
+    return weather;
   };
 
-  const weather = (lat, lon) => {
-    const params = {
-      lat: lat,
-      lon: lon,
-      units: 'metric',
-    };
+  const forecast = async () => {
+    params.type = 'forecast';
+    const forecastWeatherData = await getWeather(getData, url, key.openWeather, params);
+    const forecastWeather = getForecast(getFormatedDate(3, 12), forecastWeatherData.list);
 
-    const weatherInfo = (weatherData, date) => {
-      const weatherDataMap = {
-        details: {
-          temp: 'temp',
-          tempMin: 'temp_min',
-          tempMax: 'temp_max',
-          humidity: 'humidity',
-        },
-        weather: {
-          desc: 'description',
-          icon: 'icon',
-        },
-      };
+    const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(3));
 
-      const info = {
-        details: createMappedObject(weatherDataMap.details, { ...weatherData.main }),
-        weather: createMappedObject(weatherDataMap.weather, { ...weatherData.weather[0] }),
-      };
+    let forecast = [];
+    forecastWeather.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
 
-      if (date) {
-        info.date = new Date(Date.parse(weatherData.dt_txt)).toLocaleString('default', { weekday: 'long' });
-      }
+    forecast = addEdgeTemps(forecast, edgeTemps);
 
-      return info;
-    };
+    return forecast;
+  };
 
-    const current = async () => {
-      params.type = 'weather';
-      const weatherData = await getWeather(getData, url, key.openWeather, params);
-      return weatherInfo(weatherData);
-    };
+  return {
+    current,
+    forecast,
+  };
+};
 
-    const forecast = async () => {
-      params.type = 'forecast';
-      const weatherData = await getWeather(getData, url, key.openWeather, params);
-      const forecastData = getForecast(getForecastDates(3), weatherData.list);
-
-      const forecast = [];
-      forecastData.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
-
-      return forecast;
-    };
-
-    return {
-      current,
-      forecast,
-    };
+const init = async () => {
+  const opt = {
+    units: 'metric',
+    symbol: {
+      metric: '°C',
+      imperial: '°F',
+      standard: 'K',
+      humidity: '%',
+    },
   };
 
   const renderWeather = async () => {
     const newLocation = await location();
     // console.log(newLocation);
-    const weatherCurrent = await weather(newLocation.lat, newLocation.lon).current();
+    const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
     // console.log(weatherCurrent);
-    const weatherForecast = await weather(newLocation.lat, newLocation.lon).forecast();
+    const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
     // console.log(weatherForecast);
+    renderIcon(newLocation, ...weatherCurrent);
   };
 
   btnListener(renderWeather);
