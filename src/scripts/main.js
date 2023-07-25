@@ -16,12 +16,12 @@ import {
 } from './weather/getWeather.js';
 
 const getInput = () => {
-  const input = document.querySelector('.search__input');
+  const input = document.querySelector('.location-search__input');
   return input.value;
 };
 
 const btnListener = (fn) => {
-  const btn = document.querySelector('.search__button');
+  const btn = document.querySelector('.location-search__button');
   btn.addEventListener('click', () => fn());
 };
 
@@ -140,20 +140,36 @@ const init = async () => {
   };
 
   const renderIcon = (location, weather, forecast) => {
-    const render = (weather, className, location) => {
-      console.log(className);
-      const icon = document.querySelector(`.${className}`);
-      console.log(icon);
-
-      const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
-      if (className === 'current') {
-        icon.querySelector('.weather__icon__temp').innerHTML = formatValue(weather.details.temp);
-        icon.querySelector('.weather__icon__desc').innerHTML = weather.weather.state;
-      }
-      icon.querySelector('.weather__icon__temp-max').innerHTML = formatValue(weather.details.tempMax);
-      icon.querySelector('.weather__icon__temp-low').innerHTML = formatValue(weather.details.tempMin);
-      icon.querySelector('.weather__icon__humidity').innerHTML = weather.details.humidity + opt.symbol['humidity'];
+    const loadImage = async (url, className) => {
+      const image = new Image();
+      image.src = `https://openweathermap.org/img/wn/${url}.png`;
+      await image.decode();
+      image.classList.add(className);
+      return image;
     };
+
+    const render = async (weather, className, location) => {
+      const weatherInfo = document.querySelector(`.weather__info.${className}`);
+      const weatherInfoText = weatherInfo.querySelector('.weather__info__text');
+      const weatherInfoDesc = weatherInfo.querySelector('.weather__info__desc');
+      const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
+
+      weatherInfoText.querySelector('.weather__info__text__temp-max').innerHTML = formatValue(weather.details.tempMax);
+      weatherInfoText.querySelector('.weather__info__text__temp-low').innerHTML = formatValue(weather.details.tempMin);
+      weatherInfoText.querySelector('.weather__info__text__humidity').innerHTML =
+        weather.details.humidity + opt.symbol['humidity'];
+
+      const imageElement = await loadImage(weather.weather.icon, '.weather__info__desc__img');
+      weatherInfoDesc.prepend(imageElement);
+
+      if (className === 'current') {
+        weatherInfoText.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
+        weatherInfoDesc.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
+      }
+    };
+
+    const weatherLocation = document.querySelector('.weather__location');
+    weatherLocation.querySelector('.weather__location__text').innerHTML = `${location.name}, ${location.state}`;
 
     render(weather, 'current', location);
     forecast.forEach((forecastDay, index) => render(forecastDay, `day${index + 1}`));
