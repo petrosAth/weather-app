@@ -47,4 +47,14 @@ const extractEdgeTemp = (forecastData, dates) => {
   return temps;
 };
 
-export { getWeather, getForecast, fixOneDecimal, getFormatedDate, extractEdgeTemp };
+const extractMaxHumidity = (forecastData, dates) => {
+  const humidity = [];
+  const getMax = (day) => Math.max(...day.map((day) => day.main.humidity));
+  dates.forEach((date) => {
+    const dayTimestamps = forecastData.list.filter((timestamp) => timestamp.dt_txt.slice(0, 10) == date);
+    humidity.push(getMax(dayTimestamps));
+  });
+  return humidity;
+};
+
+export { getWeather, getForecast, fixOneDecimal, getFormatedDate, extractEdgeTemp, extractMaxHumidity };

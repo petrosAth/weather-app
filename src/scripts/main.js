@@ -6,7 +6,14 @@ import '../stylesheets/main.css';
 import * as key from './apiKeys.json';
 import { url, getData } from './weather/call.js';
 import { getLocation } from './weather/getLocation.js';
-import { getWeather, getForecast, fixOneDecimal, getFormatedDate, extractEdgeTemp } from './weather/getWeather.js';
+import {
+  getWeather,
+  getForecast,
+  fixOneDecimal,
+  getFormatedDate,
+  extractEdgeTemp,
+  extractMaxHumidity,
+} from './weather/getWeather.js';
 
 const getInput = () => {
   const input = document.querySelector('.search__input');
@@ -72,12 +79,13 @@ const weather = (lat, lon, opt) => {
     return info;
   };
 
-  const addEdgeTemps = (weather, edgeTemps) => {
+  const addEdgeTemps = (weather, edgeTemps, maxHumidity) => {
     edgeTemps.forEach((temps, index) => {
-      // console.log('weather: ', weather);
-      // console.log('temps: ', temps);
       weather[index].details['tempMax'] = temps.max;
       weather[index].details['tempMin'] = temps.min;
+      if (maxHumidity) {
+        weather[index].details['humidity'] = maxHumidity[index];
+      }
     });
     return weather;
   };
@@ -104,11 +112,12 @@ const weather = (lat, lon, opt) => {
     const forecastWeather = getForecast(getFormatedDate(4, 12), forecastWeatherData.list);
 
     const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(4));
+    const maxHumidity = extractMaxHumidity(forecastWeatherData, getFormatedDate(4));
 
     let forecast = [];
     forecastWeather.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
 
-    forecast = addEdgeTemps(forecast, edgeTemps);
+    forecast = addEdgeTemps(forecast, edgeTemps, maxHumidity);
 
     return forecast;
   };
