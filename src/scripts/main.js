@@ -179,10 +179,13 @@ const init = async () => {
 
     render(weather, 'current');
     forecast.forEach((forecastDay, index) => render(forecastDay, `day${index + 1}`));
+
+    document.querySelector('.weather__container').style.display = 'grid';
   };
 
   const renderLocation = (location) => {
     const weatherLocation = document.querySelector('.weather__location');
+    weatherLocation.style.display = 'block';
     weatherLocation.querySelector('.weather__location__text').innerHTML = `${location.name}, ${location.state}`;
   };
 
@@ -190,8 +193,8 @@ const init = async () => {
     const newLocation = await location();
     const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
-    renderWeatherInfo(...weatherCurrent, weatherForecast);
     renderLocation(newLocation);
+    renderWeatherInfo(...weatherCurrent, weatherForecast);
   };
 
   unitSelectionBtnListener(() => setTempUnit(opt));
