@@ -20,8 +20,13 @@ const getInput = () => {
   return input.value;
 };
 
-const btnListener = (fn) => {
+const locationBtnListener = (fn) => {
   const btn = document.querySelector('.location-search__button');
+  btn.addEventListener('click', () => fn());
+};
+
+const unitSelectionBtnListener = (fn) => {
+  const btn = document.querySelector('.unit-selection__button');
   btn.addEventListener('click', () => fn());
 };
 
@@ -134,59 +139,63 @@ const init = async () => {
     symbol: {
       metric: '°C',
       imperial: '°F',
-      standard: 'K',
       humidity: '%',
     },
   };
 
-  const renderIcon = (location, weather, forecast) => {
-    const loadImage = async (url, className) => {
+  const setTempUnit = (opts) => {
+    if (opts.units === 'metric') {
+      opts.units = 'imperial';
+    } else {
+      opt.units = 'metric';
+    }
+    document.querySelector('.unit-selection__button').innerHTML = opts.symbol[opts.units];
+  };
+
+  const renderWeatherInfo = (weather, forecast) => {
+    const loadImage = async (url) => {
       const image = new Image();
       image.src = `https://openweathermap.org/img/wn/${url}.png`;
       await image.decode();
-      image.classList.add(className);
-      return image;
+      return image.src;
     };
 
-    const render = async (weather, className, location) => {
+    const render = async (weather, className) => {
       const weatherInfo = document.querySelector(`.weather__info.${className}`);
-      const weatherInfoText = weatherInfo.querySelector('.weather__info__text');
-      const weatherInfoDesc = weatherInfo.querySelector('.weather__info__desc');
       const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
 
-      weatherInfoText.querySelector('.weather__info__text__temp-max').innerHTML = formatValue(weather.details.tempMax);
-      weatherInfoText.querySelector('.weather__info__text__temp-low').innerHTML = formatValue(weather.details.tempMin);
-      weatherInfoText.querySelector('.weather__info__text__humidity').innerHTML =
+      weatherInfo.querySelector('.weather__info__text__temp-max').innerHTML = formatValue(weather.details.tempMax);
+      weatherInfo.querySelector('.weather__info__text__temp-low').innerHTML = formatValue(weather.details.tempMin);
+      weatherInfo.querySelector('.weather__info__text__humidity').innerHTML =
         weather.details.humidity + opt.symbol['humidity'];
 
-      const imageElement = await loadImage(weather.weather.icon, '.weather__info__desc__img');
-      weatherInfoDesc.prepend(imageElement);
+      weatherInfo.querySelector('.weather__info__desc__img').src = await loadImage(weather.weather.icon);
 
       if (className === 'current') {
-        weatherInfoText.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
-        weatherInfoDesc.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
+        weatherInfo.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
+        weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
       }
     };
 
+    render(weather, 'current');
+    forecast.forEach((forecastDay, index) => render(forecastDay, `day${index + 1}`));
+  };
+
+  const renderLocation = (location) => {
     const weatherLocation = document.querySelector('.weather__location');
     weatherLocation.querySelector('.weather__location__text').innerHTML = `${location.name}, ${location.state}`;
-
-    render(weather, 'current', location);
-    forecast.forEach((forecastDay, index) => render(forecastDay, `day${index + 1}`));
   };
 
   const renderWeather = async () => {
     const newLocation = await location();
-    // console.log(newLocation);
     const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
-    // console.log(weatherCurrent);
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
-    // console.log(weatherForecast);
-    renderIcon(newLocation, ...weatherCurrent, weatherForecast);
-    // renderIcon(newLocation, weatherForecast);
+    renderWeatherInfo(...weatherCurrent, weatherForecast);
+    renderLocation(newLocation);
   };
 
-  btnListener(renderWeather);
+  unitSelectionBtnListener(() => setTempUnit(opt));
+  locationBtnListener(renderWeather);
 };
 
 init();
