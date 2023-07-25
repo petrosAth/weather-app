@@ -15,7 +15,7 @@ body {
   }
 }
 
-.weather__cont {
+.weather__container {
   border: var(--b);
   padding: 20px;
   display: grid;
@@ -23,8 +23,8 @@ body {
   grid-template-columns: 2fr 1fr;
 }
 
-.weather__icon__cont {
-  &.main {
+.weather__widget {
+  &.current {
     padding: 20px;
     margin: 2px;
     border: var(--b);

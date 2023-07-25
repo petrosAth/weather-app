@@ -101,9 +101,9 @@ const weather = (lat, lon, opt) => {
   const forecast = async () => {
     params.type = 'forecast';
     const forecastWeatherData = await getWeather(getData, url, key.openWeather, params);
-    const forecastWeather = getForecast(getFormatedDate(3, 12), forecastWeatherData.list);
+    const forecastWeather = getForecast(getFormatedDate(4, 12), forecastWeatherData.list);
 
-    const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(3));
+    const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(4));
 
     let forecast = [];
     forecastWeather.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
@@ -130,6 +130,26 @@ const init = async () => {
     },
   };
 
+  const renderIcon = (location, weather, forecast) => {
+    const render = (weather, className, location) => {
+      console.log(className);
+      const icon = document.querySelector(`.${className}`);
+      console.log(icon);
+
+      const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
+      if (className === 'current') {
+        icon.querySelector('.weather__icon__temp').innerHTML = formatValue(weather.details.temp);
+        icon.querySelector('.weather__icon__desc').innerHTML = weather.weather.state;
+      }
+      icon.querySelector('.weather__icon__temp-max').innerHTML = formatValue(weather.details.tempMax);
+      icon.querySelector('.weather__icon__temp-low').innerHTML = formatValue(weather.details.tempMin);
+      icon.querySelector('.weather__icon__humidity').innerHTML = weather.details.humidity + opt.symbol['humidity'];
+    };
+
+    render(weather, 'current', location);
+    forecast.forEach((forecastDay, index) => render(forecastDay, `day${index + 1}`));
+  };
+
   const renderWeather = async () => {
     const newLocation = await location();
     // console.log(newLocation);
@@ -137,7 +157,8 @@ const init = async () => {
     // console.log(weatherCurrent);
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
     // console.log(weatherForecast);
-    renderIcon(newLocation, ...weatherCurrent);
+    renderIcon(newLocation, ...weatherCurrent, weatherForecast);
+    // renderIcon(newLocation, weatherForecast);
   };
 
   btnListener(renderWeather);
