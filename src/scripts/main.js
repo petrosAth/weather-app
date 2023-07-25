@@ -174,6 +174,8 @@ const init = async () => {
       if (className === 'current') {
         weatherInfo.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
         weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
+      } else {
+        weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.date;
       }
     };
 
@@ -193,6 +195,7 @@ const init = async () => {
     const newLocation = await location();
     const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
+    console.log(weatherForecast);
     renderLocation(newLocation);
     renderWeatherInfo(...weatherCurrent, weatherForecast);
   };
