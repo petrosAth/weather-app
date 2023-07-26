@@ -13,8 +13,11 @@
 
   --f-clr: LightCyan;
   --bg: MidnightBlue;
-  --bg-light: hsl(227, 19%, 34%);
+  --bg-light: DarkSlateBlue;
+  --bg-accent: SlateBlue;
 
   --b: 2px solid SlateBlue;
   --br: 10px;
+
+  --spc: 20px;
 }

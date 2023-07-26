@@ -165,10 +165,12 @@ const init = async () => {
       const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
       let imageSize = 2;
 
-      weatherInfo.querySelector('.weather__info__text__temp-max').innerHTML = formatValue(weather.details.tempMax);
-      weatherInfo.querySelector('.weather__info__text__temp-low').innerHTML = formatValue(weather.details.tempMin);
+      weatherInfo.querySelector('.weather__info__text__temp-max').innerHTML =
+        '<i class="fa-solid fa-caret-up"></i> ' + formatValue(weather.details.tempMax);
+      weatherInfo.querySelector('.weather__info__text__temp-low').innerHTML =
+        '<i class="fa-solid fa-caret-down"></i> ' + formatValue(weather.details.tempMin);
       weatherInfo.querySelector('.weather__info__text__humidity').innerHTML =
-        weather.details.humidity + opt.symbol['humidity'];
+        '<i class="fa-solid fa-droplet"></i> ' + weather.details.humidity + opt.symbol['humidity'];
 
       if (className === 'current') {
         imageSize = 4;
