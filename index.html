@@ -4,12 +4,68 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/9236152b7e.js" crossorigin="anonymous"></script>
     <title>Weather App</title>
-    <script type="module" crossorigin src="/assets/index-1950178e.js"></script>
-    <link rel="stylesheet" href="/assets/index-9d9ae4af.css">
+    <script type="module" crossorigin src="/assets/index-35253461.js"></script>
+    <link rel="stylesheet" href="/assets/index-c6412224.css">
   </head>
   <body>
-    <div id="app"></div>
-    <h1>Hello world</h1>
+    <div id="app">
+      <div class="user-input__container">
+        <div class="user-input__location-search">
+          <input type="text" class="location-search__input" placeholder="Enter you location..." />
+          <button class="location-search__button"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div class="user-input__unit-selection">
+          <button class="unit-selection__button">°C</button>
+        </div>
+      </div>
+      <div class="weather__container" style="display: none">
+        <div class="weather__widget current">
+          <div class="weather__info current">
+            <div class="weather__info__desc">
+              <img class="weather__info__desc__img" src="" alt="" />
+              <p class="weather__info__desc__weather"></p>
+            </div>
+            <h2 class="weather__info__text__temp"></h2>
+            <div class="weather__info__text current">
+              <h4 class="weather__info__text__temp-max"></h4>
+              <h4 class="weather__info__text__temp-low"></h4>
+              <h4 class="weather__info__text__humidity"></h4>
+            </div>
+          </div>
+        </div>
+        <div class="weather__widget forecast">
+          <div class="weather__info day1">
+            <h3 class="weather__info__day"></h3>
+            <img class="weather__info__img" src="" alt="" />
+            <div class="weather__info__text">
+              <h4 class="weather__info__text__temp-max"></h4>
+              <h4 class="weather__info__text__temp-low"></h4>
+              <h4 class="weather__info__text__humidity"></h4>
+            </div>
+          </div>
+          <div class="weather__info day2">
+            <h3 class="weather__info__day"></h3>
+            <img class="weather__info__img" src="" alt="" />
+            <div class="weather__info__text">
+              <h4 class="weather__info__text__temp-max"></h4>
+              <h4 class="weather__info__text__temp-low"></h4>
+              <h4 class="weather__info__text__humidity"></h4>
+            </div>
+          </div>
+          <div class="weather__info day3">
+            <h3 class="weather__info__day"></h3>
+            <img class="weather__info__img" src="" alt="" />
+            <div class="weather__info__text">
+              <h4 class="weather__info__text__temp-max"></h4>
+              <h4 class="weather__info__text__temp-low"></h4>
+              <h4 class="weather__info__text__humidity"></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
   </body>
 </html>
