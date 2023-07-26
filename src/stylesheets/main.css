@@ -53,4 +53,25 @@ body {
   padding: 20px;
   margin: 2px;
   border: var(--b);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.weather__info__text__temp {
+  font-size: var(--fs-3);
+}
+
+.weather__info__desc {
+  display: grid;
+  justify-content: end;
+}
+
+.weather__info__desc__text {
+  font-size: var(--fs-3);
+  text-align: center;
+}
+
+.weather__info__desc__text {
+  font-size: var(--fs-3);
+  text-align: center;
 }

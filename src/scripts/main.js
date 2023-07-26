@@ -114,10 +114,10 @@ const weather = (lat, lon, opt) => {
   const forecast = async () => {
     params.type = 'forecast';
     const forecastWeatherData = await getWeather(getData, url, key.openWeather, params);
-    const forecastWeather = getForecast(getFormatedDate(4, 12), forecastWeatherData.list);
+    const forecastWeather = getForecast(getFormatedDate(3, 12), forecastWeatherData.list);
 
-    const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(4));
-    const maxHumidity = extractMaxHumidity(forecastWeatherData, getFormatedDate(4));
+    const edgeTemps = extractEdgeTemp(forecastWeatherData, getFormatedDate(3));
+    const maxHumidity = extractMaxHumidity(forecastWeatherData, getFormatedDate(3));
 
     let forecast = [];
     forecastWeather.forEach((forecastDayData) => forecast.push(weatherInfo(forecastDayData, true)));
@@ -153,9 +153,9 @@ const init = async () => {
   };
 
   const renderWeatherInfo = (weather, forecast) => {
-    const loadImage = async (url) => {
+    const loadImage = async (url, size) => {
       const image = new Image();
-      image.src = `https://openweathermap.org/img/wn/${url}.png`;
+      image.src = `https://openweathermap.org/img/wn/${url}@${size}x.png`;
       await image.decode();
       return image.src;
     };
@@ -163,20 +163,22 @@ const init = async () => {
     const render = async (weather, className) => {
       const weatherInfo = document.querySelector(`.weather__info.${className}`);
       const formatValue = (value) => `${fixOneDecimal(value)}${opt.symbol[opt.units]}`;
+      let imageSize = 2;
 
       weatherInfo.querySelector('.weather__info__text__temp-max').innerHTML = formatValue(weather.details.tempMax);
       weatherInfo.querySelector('.weather__info__text__temp-low').innerHTML = formatValue(weather.details.tempMin);
       weatherInfo.querySelector('.weather__info__text__humidity').innerHTML =
         weather.details.humidity + opt.symbol['humidity'];
 
-      weatherInfo.querySelector('.weather__info__desc__img').src = await loadImage(weather.weather.icon);
-
       if (className === 'current') {
+        imageSize = 4;
         weatherInfo.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
         weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
       } else {
         weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.date;
       }
+
+      weatherInfo.querySelector('.weather__info__desc__img').src = await loadImage(weather.weather.icon, imageSize);
     };
 
     render(weather, 'current');
@@ -193,7 +195,6 @@ const init = async () => {
     const newLocation = await location();
     const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
-    console.log(weatherForecast);
     renderLocation(newLocation);
     renderWeatherInfo(...weatherCurrent, weatherForecast);
   };
