@@ -3,11 +3,18 @@ body {
   background-color: var(--bg);
 }
 
+.space {
+  border: var(--b);
+  padding: 20px;
+}
+
 .user-input__container {
+  width: 80vw;
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr auto;
   gap: 20px;
+  margin: auto;
 }
 
 .user-input__location-search {
@@ -28,31 +35,21 @@ body {
 }
 
 .weather__container {
-  border: var(--b);
-  padding: 20px;
+  margin: auto;
+  width: 80vw;
   display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 2fr 1fr;
+  grid-template-rows: auto;
+  grid-template-columns: 1fr;
 }
 
 .weather__widget {
-  &.current {
-    padding: 20px;
-    margin: 2px;
-    border: var(--b);
-  }
-
   &.forecast {
-    padding: 20px;
-    margin: 2px;
-    border: var(--b);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .weather__info {
-  padding: 20px;
-  margin: 2px;
-  border: var(--b);
   display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
