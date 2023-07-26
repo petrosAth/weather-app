@@ -186,9 +186,7 @@ const init = async () => {
   };
 
   const renderLocation = (location) => {
-    const weatherLocation = document.querySelector('.weather__location');
-    weatherLocation.style.display = 'block';
-    weatherLocation.querySelector('.weather__location__text').innerHTML = `${location.name}, ${location.state}`;
+    document.querySelector('.location-search__input').value = `${location.name}, ${location.state}`;
   };
 
   const renderWeather = async () => {

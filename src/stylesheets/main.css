@@ -35,11 +35,6 @@ body {
   grid-template-columns: 2fr 1fr;
 }
 
-.weather__location {
-  border: var(--b);
-  padding: 20px;
-}
-
 .weather__widget {
   &.current {
     padding: 20px;
