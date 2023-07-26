@@ -175,12 +175,12 @@ const init = async () => {
       if (className === 'current') {
         imageSize = 4;
         weatherInfo.querySelector('.weather__info__text__temp').innerHTML = formatValue(weather.details.temp);
-        weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.weather.state;
+        weatherInfo.querySelector('.weather__info__desc__weather').innerHTML = weather.weather.state;
+        weatherInfo.querySelector('.weather__info__desc__img').src = await loadImage(weather.weather.icon, imageSize);
       } else {
-        weatherInfo.querySelector('.weather__info__desc__text').innerHTML = weather.date;
+        weatherInfo.querySelector('.weather__info__day').innerHTML = weather.date;
+        weatherInfo.querySelector('.weather__info__img').src = await loadImage(weather.weather.icon, imageSize);
       }
-
-      weatherInfo.querySelector('.weather__info__desc__img').src = await loadImage(weather.weather.icon, imageSize);
     };
 
     render(weather, 'current');

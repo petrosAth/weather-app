@@ -8,17 +8,18 @@
   --fs-1: 7rem;
   --fs-2: 5rem;
   --fs-3: 2rem;
+  --fs-4: 1.25rem;
   --fs-p: 1rem;
   --fs-btn: 1.5rem;
 
   --f-clr: hsla(13, 81%, 98%, 1);
   --f-clr-dark: hsla(13, 81%, 2%, 1);
-  --primary-clr: hsla(13, 81%, 68%, 1);
+  --clr-primary: hsla(13, 81%, 68%, 1);
   --bg: hsla(162, 15%, 8%, 1);
   --bg-light: hsla(162, 15%, 11%, 1);
   --bg-accent: hsla(162, 15%, 14%, 1);
 
-  --b: 2px solid var(--primary-clr);
+  --b: 4px dotted var(--bg);
   --br: 10px;
 
   --spc: 20px;

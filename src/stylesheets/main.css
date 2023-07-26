@@ -4,6 +4,12 @@ body {
 }
 
 h3 {
+  font-size: var(--fs-3);
+  font-weight: var(--fw-m);
+}
+
+h4 {
+  font-size: var(--fs-4);
   font-weight: var(--fw-n);
 }
 
@@ -77,6 +83,7 @@ i[class^='fa'] {
     border: none;
     font-size: var(--fs-3);
     font-weight: var(--fw-m);
+    width: 5ch;
   }
 }
 
@@ -99,37 +106,76 @@ i[class^='fa'] {
   }
 }
 
-.weather__info {
+.weather__info.current {
+  padding: var(--spc);
   background: var(--bg-accent);
   border-radius: var(--br);
   display: grid;
-  grid-auto-flow: column;
-  /* grid-template-columns: 1fr 2fr; */
-  /* grid-template-rows: 1fr; */
-  /* align-content: center; */
+  grid-template-rows: 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+
+  & .weather__info__desc {
+    display: grid;
+
+    & .weather__info__desc__img {
+      align-self: center;
+      justify-self: center;
+    }
+
+    & .weather__info__desc__weather {
+      font-size: 3rem;
+      font-weight: var(--fw-m);
+      padding-left: 10%;
+      align-self: center;
+      margin: 10px;
+    }
+  }
+
+  & .weather__info__text__temp {
+    font-size: 7rem;
+    align-self: center;
+    margin: 0;
+  }
+
+  & .weather__info__text {
+    &.current {
+      font-size: var(--fs-p);
+      align-self: center;
+      justify-self: center;
+      border-left: var(--b);
+      padding-left: 20%;
+    }
+  }
 }
 
-/* .weather__info__text { */
-/*   font-size: var(); */
-/* } */
+[class^='weather__info day'] {
+  background: var(--bg-accent);
+  border-radius: var(--br);
+  display: grid;
+  grid-template:
+    'day day' 30%
+    'icon text' auto
+    / auto 40%;
 
-.weather__info__text__temp {
-  font-size: var(--fs-3);
-}
+  & > .weather__info__day {
+    grid-area: day;
+    justify-self: start;
+    align-self: center;
+    padding-inline: 10%;
+  }
 
-.weather__info__desc {
-  /* display: grid; */
-  /* grid-template-rows: 1fr 1fr; */
-  /* grid-template-columns: 1fr; */
-  /* justify-items: center; */
-}
+  & > .weather__info__img {
+    display: block;
+    grid-area: icon;
+    justify-self: center;
+    align-self: center;
+  }
 
-.weather__info__desc__img {
-  display: block;
-}
-
-.weather__info__desc__text {
-  font-size: var(--fs-3);
-  text-align: center;
-  font-weight: var(--fw-m);
+  & > .weather__info__text {
+    font-size: var(--fs-p);
+    grid-area: text;
+    align-self: center;
+    border-left: var(--b);
+    padding-left: 20%;
+  }
 }
