@@ -138,6 +138,7 @@ const weather = (lat, lon, opt) => {
 };
 
 const init = async () => {
+  let hasWeather = false;
   const opt = {
     units: 'metric',
     symbol: {
@@ -147,13 +148,16 @@ const init = async () => {
     },
   };
 
-  const setTempUnit = (opts) => {
+  const setTempUnit = (opts, fn) => {
     if (opts.units === 'metric') {
       opts.units = 'imperial';
     } else {
       opt.units = 'metric';
     }
     document.querySelector('.unit-selection__button').innerHTML = opts.symbol[opts.units];
+    if (hasWeather) {
+      fn();
+    }
   };
 
   const renderWeatherInfo = (weather, forecast) => {
@@ -204,12 +208,13 @@ const init = async () => {
     if (weatherCurrent.length > 0 && weatherForecast.length > 0) {
       renderLocation(newLocation);
       renderWeatherInfo(...weatherCurrent, weatherForecast);
+      hasWeather = true;
     } else {
       console.log('Weather data could not be retrieved!');
     }
   };
 
-  unitSelectionBtnListener(() => setTempUnit(opt));
+  unitSelectionBtnListener(() => setTempUnit(opt, renderWeather));
   locationBtnListener(renderWeather);
 };
 
