@@ -201,8 +201,12 @@ const init = async () => {
     const newLocation = await location();
     const weatherCurrent = await weather(newLocation.lat, newLocation.lon, opt).current();
     const weatherForecast = await weather(newLocation.lat, newLocation.lon, opt).forecast();
-    renderLocation(newLocation);
-    renderWeatherInfo(...weatherCurrent, weatherForecast);
+    if (weatherCurrent.length > 0 && weatherForecast.length > 0) {
+      renderLocation(newLocation);
+      renderWeatherInfo(...weatherCurrent, weatherForecast);
+    } else {
+      console.log('Weather data could not be retrieved!');
+    }
   };
 
   unitSelectionBtnListener(() => setTempUnit(opt));
