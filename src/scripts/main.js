@@ -104,6 +104,10 @@ const weather = (lat, lon, opt) => {
 
     const edgeTemps = extractEdgeTemp(forecastWeatherData, [getFormatedDate()]);
 
+    if (edgeTemps[0].max < currentWeatherData.main.temp) {
+      edgeTemps[0].max = currentWeatherData.main.temp;
+    }
+
     let weather = weatherInfo(currentWeatherData);
 
     weather = addEdgeTemps([weather], edgeTemps);
