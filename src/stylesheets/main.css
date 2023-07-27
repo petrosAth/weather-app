@@ -112,7 +112,7 @@ i[class^='fa'] {
   border-radius: var(--br);
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 45% auto auto;
 
   & .weather__info__desc {
     display: grid;
@@ -125,15 +125,19 @@ i[class^='fa'] {
     & .weather__info__desc__weather {
       font-size: 3rem;
       font-weight: var(--fw-m);
+      margin: 0;
       padding-left: 10%;
+      padding-bottom: 5%;
       align-self: center;
-      margin: 10px;
     }
   }
 
   & .weather__info__text__temp {
     font-size: 7rem;
+    text-align: center;
+    justify-self: stretch;
     align-self: center;
+    border-inline: var(--b);
     margin: 0;
   }
 
@@ -142,8 +146,6 @@ i[class^='fa'] {
       font-size: var(--fs-p);
       align-self: center;
       justify-self: center;
-      border-left: var(--b);
-      padding-left: 20%;
     }
   }
 }
@@ -177,5 +179,11 @@ i[class^='fa'] {
     align-self: center;
     border-left: var(--b);
     padding-left: 20%;
+    display: grid;
+    gap: 10px;
+
+    & > * {
+      margin: 0;
+    }
   }
 }
