@@ -2,7 +2,7 @@
 
 A weather app.
 
-The main objectives of this project was to practice on working with APIs and the
+The main objectives of this project are to practice on working with APIs and the
 use of async/await functions.
 
 This website was created as part of
@@ -34,5 +34,9 @@ development.
     ensure browser compatibility
   - [`Autoprefixer`](https://github.com/postcss/autoprefixer): Automatically add
     vendor prefixes in CSS to ensure browser compatibility
-- [`ESLint`](https://eslint.org): Linter that statically analyzes the JavaScript
-  code to quickly find problems
+- [`ESLint`](https://eslint.org/): Linter that statically analyzes the
+  JavaScript code to quickly find problems
+- [`Prettier`](https://prettier.io/): Prettier is an opinionated code formatter.
+  It enforces a consistent style by parsing your code and re-printing it with
+  its own rules that take the maximum line length into account, wrapping code
+  when necessary
